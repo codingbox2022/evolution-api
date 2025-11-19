@@ -1,14 +1,14 @@
 version: "3.8"
+
 services:
   evolution-api:
-    container_name: thae_evolution_api  # <- Cambiar nombre único por proyecto
     image: evoapicloud/evolution-api:latest
     restart: always
     depends_on:
       - redis
       - evolution-postgres
     ports:
-      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:18080:8080"  # DEV: API solo expuesta en localhost por puerto 18080
     volumes:
       - evolution_instances:/evolution/instances
     networks:
@@ -20,18 +20,16 @@ services:
       - "8080"
 
   frontend:
-    container_name: thae_evolution_frontend  # <- Agregar nombre único
     image: evoapicloud/evolution-manager:latest
     restart: always
     ports:
-      - "3001:80"
+      - "3002:80"  # DEV: frontend en 3002 para no chocar con prod
     volumes:
       - ./nginx.evolution.conf:/etc/nginx/conf.d/nginx.conf:ro
     networks:
       - evolution-net
 
   redis:
-    container_name: thae_evolution_redis  # <- Cambiar nombre único
     image: redis:latest
     restart: always
     command: >
@@ -49,7 +47,6 @@ services:
       - "6379"
 
   evolution-postgres:
-    container_name: thae_evolution_postgres  # <- Cambiar nombre único
     image: postgres:15
     restart: always
     env_file:
@@ -81,6 +78,6 @@ networks:
   evolution-net:
     name: evolution-net
     driver: bridge
-    external: true  # <- Agregar esta línea
+    external: true
   dokploy-network:
     external: true
