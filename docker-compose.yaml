@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   evolution-api:
     container_name: thae_evolution_api
@@ -7,7 +9,7 @@ services:
       - redis
       - evolution-postgres
     ports:
-      - "127.0.0.1:${PORT:-8080}:8080"  # Usa la variable PORT o 8080 por defecto
+      - "127.0.0.1:18080:8080"  # API PROD expuesta en 18080, interno sigue en 8080
     volumes:
       - evolution_instances:/evolution/instances
     networks:
@@ -23,7 +25,7 @@ services:
     image: evoapicloud/evolution-manager:latest
     restart: always
     ports:
-      - "${FRONTEND_PORT:-3001}:80"  # También puedes parametrizar el frontend
+      - "3001:80"  # Frontend PROD en 3001
     volumes:
       - ./nginx.evolution.conf:/etc/nginx/conf.d/nginx.conf:ro
     networks:
